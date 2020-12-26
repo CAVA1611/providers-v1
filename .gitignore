@@ -1,2 +1,7 @@
 node_modules/
 .devcontainer
+package-lock.json
+package.json
+index.js
+.gitignore
+index.js
