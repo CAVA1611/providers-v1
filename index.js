@@ -29,7 +29,16 @@ app.get("/", (req, res) => {
 
 app.get(BASE_API_PATH + "/providers", (req, res) =>{
     console.log(Date() + "- GET /providers");
+    db.find ({},(err,providers) =>{
+        if (err) {
+            console.log(Date() + "-" + err );
+            res.sendStatus(500);
+        }else {
+            res.sendStatus(providers);
+        }
+    });
     res.send(providers);
+   
 });
 
 app.post(BASE_API_PATH + "/providers", (req, res) => {
