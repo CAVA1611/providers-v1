@@ -49,6 +49,24 @@ app.post(BASE_API_PATH + "/providers", (req, res) => {
     });
 });
 
+app.put(BASE_API_PATH + "/providers" + "/:id" + "/email", (req, res) => {
+    console.log(Date() + "- DELETE /providers/id/email");
+    var email_prov = req.body.email;
+    console.log(email_prov);
+    var cifID = req.params.id;
+    db.update({cif: cifID}, {$set:{email: email_prov}}, {multi: true}, (err) => {
+    if (err) {
+    console.log(Date() + " - " + err);
+    res.sendStatus(500);
+    } else {
+    res.sendStatus(200);
+    console.log("El email Acualizado es:" + email_prov)
+    }
+    });
+});
+
+
+
 app.listen(port);
 
 console.log("Server ready...!!");
