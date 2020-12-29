@@ -1,5 +1,6 @@
-{"cif":"A58818501","name":"Proveedor 1","address":"Sevilla","cp":"20011","phone":"0976543234","email":"provedor1@gmail.com","_id":"8yJ0YA3uhqlqzYDi"}
-{"cif":"A56783245","name":"Proveedor 2","address":"Madrid","cp":"21832","phone":"0987635241","email":"provedor2@gmail.com","_id":"M6nNzdJewixtdfs6"}
-{"cif":"A58818501","name":"Proveedor 1","address":"Sevilla","cp":"20011","phone":"0976543234","email":"provedor1@gmail.com","_id":"WABpcKXPueIEzCCd"}
-{"cif":"A58818501","name":"Proveedor 1","address":"Sevilla","cp":"20011","phone":"0976543234","email":"hyhdkasjd@gmail.com","_id":"8yJ0YA3uhqlqzYDi"}
-{"cif":"A58818501","name":"Proveedor 1","address":"Sevilla","cp":"20011","phone":"0976543234","email":"hyhdkasjd@gmail.com","_id":"WABpcKXPueIEzCCd"}
+{"cif":"A65321782","name":"Proveedor 3","address":"Malaga","cp":"18945","phone":"0987690000","email":"provedor3@gmail.com","code":"FGH789","stock_sale":"200","_id":"1I6XRCUGofL8TVc7"}
+{"cif":"A58818501","name":"Proveedor 1","address":"Sevilla","cp":"20011","phone":"0976543234","email":"provedor1@gmail.com","code":"ABC123","stock_sale":"200","_id":"MpeQz9IQwSqPSkML"}
+{"cif":"A56783245","name":"Proveedor 2","address":"Madrid","cp":"21832","phone":"0987635241","email":"provedor2@gmail.com","code":"CDE456","stock_sale":"200","_id":"fAEmApwuJv57d3Mh"}
+{"cif":"A89325672","name":"Proveedor 4","address":"Barcelona","cp":"54324","phone":"0911111324","email":"provedor4@gmail.com","code":"IJK101","stock_sale":"200","_id":"oExKyjodi1JjakDm"}
+{"$$deleted":true,"_id":"1I6XRCUGofL8TVc7"}
+{"$$deleted":true,"_id":"fAEmApwuJv57d3Mh"}
