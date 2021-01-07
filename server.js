@@ -9,8 +9,8 @@ app.use(bodyParser.json());
 
 
 /////
-app.get("/", (req, res) => {
-    res.send("<html><body><h1>Providers V2 - using MongoDB</h1></body></html>");
+app.get("*", (req, res) => {
+    res.send("<html><body><h1>Providers V2 - using Mongo Atlas</h1></body></html>");
 });
 
 app.get(BASE_API_PATH + "/providers", (req, res) =>{
