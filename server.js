@@ -9,8 +9,8 @@ app.use(bodyParser.json());
 
 
 /////
-app.get("*", (req, res) => {
-    res.send("<html><body><h1>Providers V2 - using Mongo Atlas</h1></body></html>");
+app.get("/", (req, res) => {
+    res.send("<html><body><h1>Providers V2 - Online Store</h1></body></html>");
 });
 
 app.get(BASE_API_PATH + "/providers", (req, res) =>{
@@ -42,7 +42,7 @@ app.post(BASE_API_PATH + "/providers", (req, res) => {
 });
 
 
-//PUT Method para un actualizar un elemnto del proveedor 3
+//PUT Method para un actualizar ejm mail del proveedor 3
 //"email":"provedor3@gmail.com"}
     
 app.put(BASE_API_PATH + "/providers" + "/:id" + "/email", (req, res) => {
@@ -61,10 +61,34 @@ app.put(BASE_API_PATH + "/providers" + "/:id" + "/email", (req, res) => {
       });
 });
 
- 
+//actualizar todo el proveedor
+app.put(BASE_API_PATH + "/providers" + "/:id" + "/update", (req, res) => {
+    console.log(Date() + "- DELETE /providers/id/update");
+    var cif_prov = req.body.cif;
+    var name_prov = req.body.name;
+    var address_prov = req.body.address;
+    var cp_prov = req.body.cp;
+    var email_prov = req.body.email;
+    var phone_prov = req.body.phone;
+    var email_prov = req.body.email;
+    var cifID = req.params.id;
+    Provider.updateOne({cif: cifID}, {$set:{cif:cif_prov, 
+        name: name_prov, 
+        address: address_prov, 
+        cp: cp_prov,
+        email: email_prov,
+        phone: phone_prov}}, {multi: true}, (err)  => {
+        if (err) {
+            console.log(Date() + " - " + err);
+            res.sendStatus(500);
+        } else {
+            res.sendStatus(200);
+            console.log("Los datos del Proveedor han sido actualizados")
+        }
+      });
+});
 
-
-//DELETE Method - Elimina todos los registros que se han ingresado con el POST
+//DELETE Method - Elimina todos los proveedores
 
 app.delete(BASE_API_PATH + "/providers", (req, res) => {
     console.log(Date() + "- DELETE /providers");
@@ -73,7 +97,7 @@ app.delete(BASE_API_PATH + "/providers", (req, res) => {
             console.log(Date() + " - " + err);
             res.sendStatus(500);
         } else {
-            res.sendStatus(200);
+            res.sendStatus(204);
         }
     });
 });
@@ -89,27 +113,10 @@ app.delete(BASE_API_PATH + "/providers" + '/:id', (req, res) => {
             console.log(Date() + " - " + err);
             res,sendStatus(500);
         } else {
-            res.sendStatus(200);
+            res.sendStatus(204);
             console.log("Se elimino el Provedor con CIF:  " + cifID);
         }
     });
-});
-
-
-app.put(BASE_API_PATH + "/providers" + "/:id" + "/email", (req, res) => {
-    console.log(Date() + "- DELETE /providers/id/email");
-    var email_prov = req.body.email;
-    console.log(email_prov);
-    var cifID = req.params.id;
-    Provider.updateOne({cif: cifID}, {$set:{email: email_prov}}, {multi: true}, (err)  => {
-        if (err) {
-            console.log(Date() + " - " + err);
-            res.sendStatus(500);
-        } else {
-            res.sendStatus(200);
-            console.log("El email Acualizado es:" + email_prov)
-        }
-      });
 });
 
 
