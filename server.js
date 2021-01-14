@@ -1,7 +1,8 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-var BASE_API_PATH = "/api/v1";
+var BASE_API_PATH = "/api/v3";
 const Provider = require ('./providers');
+const ProductResource = require('./productResource.js');
 
 
 var app = express();
@@ -118,6 +119,23 @@ app.delete(BASE_API_PATH + "/providers" + '/:id', (req, res) => {
         }
     });
 });
+
+
+
+//////integarcion
+
+app.get(BASE_API_PATH + "/products", (req, response) =>{
+    console.log("GET /Products");
+
+    ProductResource.getAllProducts()
+        .then((body) => {
+        response.send(body);
+    })
+    .catch((error) => {
+        console.log("error de: " + error);
+        response.sendStatus(500);
+    })
+})
 
 
 module.exports = app;
