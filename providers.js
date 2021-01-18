@@ -22,6 +22,7 @@ providerSchema.methods.cleanup = function() {
         stock_sale: this.stock_sale
     };
 }
+ 
 
 const Provider = mongoose.model('Provider', providerSchema);
 
