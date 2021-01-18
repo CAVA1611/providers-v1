@@ -2,10 +2,6 @@ const app = require('../server.js');
 const Provider = require('../providers.js');
 const request = require('supertest');
 
-
-//const { isMainThread } = require("worker_threads");
-//const { response, query } = require('express');
-
 describe("Hello World test", () => {
     it("Should do an stupid test", () =>{
         const a = 5;
@@ -104,3 +100,4 @@ describe("Providers API", () =>{
     });
 
 });
+

@@ -11,6 +11,7 @@ COPY index.js .
 COPY server.js .
 COPY db.js .
 COPY providers.js .
+COPY orderResource.js .
 
 EXPOSE 4500
 
