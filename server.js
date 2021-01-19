@@ -32,6 +32,7 @@ app.get(BASE_API_PATH + "/providers", (req, res) =>{
 app.post(BASE_API_PATH + "/providers", (req, res) => {
     console.log(Date() + "- POST /providers");
     var provider = req.body;
+
     Provider.create(provider, (err) => {
         if (err) {
             console.log(Date() + " - " + err);
@@ -63,7 +64,7 @@ app.put(BASE_API_PATH + "/providers" + "/:id" + "/email", (req, res) => {
 });
 
 //actualizar todo el proveedor
-app.put(BASE_API_PATH + "/providers" + "/:id" + "/update", (req, res) => {
+app.put(BASE_API_PATH + "/providers"+"/:id", (req, res) => {
     console.log(Date() + "- DELETE /providers/id/update");
     var cif_prov = req.body.cif;
     var name_prov = req.body.name;
