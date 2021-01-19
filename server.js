@@ -2,6 +2,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var BASE_API_PATH = "/api/v1";
 const Provider = require ('./providers');
+const OrderResource = require('./orderResource.js');
 
 
 var app = express();
@@ -117,6 +118,56 @@ app.delete(BASE_API_PATH + "/providers" + '/:id', (req, res) => {
             console.log("Se elimino el Provedor con CIF:  " + cifID);
         }
     });
+});
+
+
+
+//integracion con MS Prdoducts
+
+app.get(BASE_API_PATH + "/:id" + "/:stock", (req, res) => {
+    console.log(Date() + "- Send info Stock");
+    const aux = req.params.stock;
+    Provider.findOne({cif: req.params.id}, (err, providers) => {
+        if(err){
+            console.log(Date() + " - " + err);
+            res.sendStatus(500);
+        } else{
+            res.status(200).send(providers);
+            console.log("Codigo del Producto: " + providers.code + 
+            " -  stock Disponible: " + providers.stock_sale)
+        }
+        const prov_stock = providers.stock_sale;
+        if(prov_stock < aux){
+            console.log("NOT ENOUGH STOCK");
+        }else{
+            Provider.updateOne({cif: req.params.id}, {$set: {stock_sale: prov_stock - aux}}, {new: true}, 
+                (err) => {
+                    if(err){
+                        console.log("NO se pudo");
+                    }else{
+                        console.log("Updated");
+                    }
+                })
+        }
+        
+    })
+})
+
+
+
+//////integarcion con MS Orders
+
+app.get(BASE_API_PATH+ "/orders", (req,response)=>{
+    console.log(Date() + " - GET /orders");
+
+    OrderResource.getAllOrders()
+        .then((body)=>{
+            response.send(body);
+        })
+        .catch((error)=>{
+            console.log("error: "+error);
+            response.sendStatus(500);
+        })
 });
 
 
