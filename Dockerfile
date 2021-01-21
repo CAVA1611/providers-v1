@@ -12,6 +12,8 @@ COPY server.js .
 COPY db.js .
 COPY providers.js .
 COPY orderResource.js .
+COPY passport.js .
+COPY apikey.js .
 
 EXPOSE 4500
 
