@@ -1,7 +1,6 @@
 const app = require('../server.js');
 const Provider = require('../providers.js');
 const request = require('supertest');
-const { response, query } = require('express');
 const ApiKey = require('../apikey.js');
 const { query } = require('express');
 const apikey = require('../apikey');
@@ -21,16 +20,30 @@ describe("Hello World test", () => {
 
 describe("Providers API", () =>{
     describe("GET /", () => {
+        const user = {
+            user: "test",
+            apikey: "49ac"
+        };
+
+        auth = jest.spyOn(ApiKey, "findOne");
+            auth.mockImplementation((query, callback) => {
+                callback(null, new ApiKey(user));
+            });
+        
+
         it("Should return an HTML document", () => {
-            return request(app).get("/").then((response) => {
-                expect(response.status).toBe(200);
-                expect(response.type).toEqual(expect.stringContaining("html"));
-                expect(response.text).toEqual(expect.stringContaining("h1"));
+            return request(app).get("/")
+                .set('apikey', '49ac')
+                .then((response) => {
+                    expect(response.status).toBe(200);
+                    expect(response.type).toEqual(expect.stringContaining("html"));
+                    expect(response.text).toEqual(expect.stringContaining("h1"));
             }) ;
         });
     });
 
     describe("GET /providers", () =>{
+
         beforeAll(() => {
             const providers = [
                 new Provider (
@@ -54,7 +67,7 @@ describe("Providers API", () =>{
 
             const user = {
                 user: "test",
-                apikey: "1"
+                apikey: "49ac"
             }
 
             dbFind = jest.spyOn(Provider, "find");
@@ -70,7 +83,9 @@ describe("Providers API", () =>{
     
 
         it('Should return all providers', () => {
-            return  request(app).get('/api/v1/providers').set('apikey', '1').then((response) =>{
+            return  request(app).get('/api/v1/providers')
+            .set('apikey', '49ac')
+            .then((response) =>{
                 expect(response.statusCode).toBe(200);
                 expect(response.body).toBeArrayOfSize(2);
                 expect(dbFind).toBeCalledWith({}, expect.any(Function));
@@ -85,12 +100,23 @@ describe("Providers API", () =>{
         dbRemove = jest.spyOn(Provider, "deleteMany");
         });
 
+        const user = {
+            user: "test",
+            apikey: "49ac"
+        }
+
+        auth = jest.spyOn(ApiKey, "findOne");
+            auth.mockImplementation((query, callback) => {
+                callback(null, new ApiKey(user));
+            })
+
         it('Should delete all providers', () => {
             dbRemove.mockImplementation((query, c, callback) =>{
                 callback(false);
             });
 
             return request(app).delete('/api/v1/providers')
+            .set('apikey', '49ac')
             .then((response) =>{
                 expect(response.statusCode).toBe(204);
                 expect(response.body).toBeNaN();
@@ -103,6 +129,7 @@ describe("Providers API", () =>{
                 callback(true);
             });
             return request(app).delete('/api/v1/providers')
+            .set('apikey', '49ac')
             .then((response) => {
                 expect(response.statusCode).toBe(500);
             });
@@ -123,6 +150,16 @@ describe("Providers API", () =>{
         stock_sale: "200"}
         ;
 
+        const user = {
+            user: "test",
+            apikey: "49ac"
+        };
+
+        auth = jest.spyOn(ApiKey, "findOne");
+            auth.mockImplementation((query, callback) => {
+                callback(null, new ApiKey(user));
+            });
+
         beforeEach(() => {
         dbUpdate = jest.spyOn(Provider, "updateOne");
         });
@@ -133,6 +170,7 @@ describe("Providers API", () =>{
             });
 
             return request(app).put('/api/v1/provider/A65321782')
+            .set('apikey', '49ac')
             .send(provider)
             .then((response) =>{
                 expect(response.statusCode).toBe(200);
@@ -147,6 +185,7 @@ describe("Providers API", () =>{
             });
 
             return request(app).put('/api/v1/provider/A65321782')
+            .set('apikey', '49ac')
             .send(provider)
             .then((response) => {
                 expect(response.statusCode).toBe(500);
@@ -168,18 +207,33 @@ describe("Providers API", () =>{
                             phone: "0987690000",
                             email: "provedor3@gmail.com",
                             code: "FGH789",
-                            stock_sale: "200"};
+                            stock_sale: "200"}
+                            ;
 
             beforeEach(() => {
             dbInsert = jest.spyOn(Provider, "create");
             });
+
+            const user = {
+                user: "test",
+                apikey: "49ac"
+            };
+    
+            auth = jest.spyOn(ApiKey, "findOne");
+                auth.mockImplementation((query, callback) => {
+                    callback(null, new ApiKey(user));
+                });
+    
 
             it('Should add a new provider if everything is fine', () => {
                 dbInsert.mockImplementation((c, callback) =>{
                     callback(false);
                 });
 
-                return request(app).post('/api/v1/providers').send(provider).then((response) =>{
+                return request(app).post('/api/v1/providers')
+                .set('apikey', '49ac')
+                .send(provider)
+                .then((response) =>{
                     expect(response.statusCode).toBe(201);
                     expect(dbInsert).toBeCalledWith(provider, expect.any(Function));
                 });
@@ -189,7 +243,10 @@ describe("Providers API", () =>{
                 dbInsert.mockImplementation((c, callback) => {
                 callback(true);
                 });
-                return request(app).post('/api/v1/providers').send(provider).then((response) =>{
+                return request(app).post('/api/v1/providers')
+                .set('apikey', '49ac')
+                .send(provider)
+                .then((response) =>{
                 expect(response.statusCode).toBe(500);
             });
         });
