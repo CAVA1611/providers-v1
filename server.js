@@ -3,18 +3,26 @@ var bodyParser = require('body-parser');
 var BASE_API_PATH = "/api/v1";
 const Provider = require ('./providers');
 const OrderResource = require('./orderResource.js');
+const passport = require('passport');
+require('./passport.js');
 
 
 var app = express();
 app.use(bodyParser.json());
+app.use(passport.initialize());
+
 
 
 /////
-app.get("/", (req, res) => {
+app.get("/",
+    passport.authenticate('localapikey', {session: false}),    
+    (req, res) => {
     res.send("<html><body><h1>Providers V2 - Online Store</h1></body></html>");
 });
 
-app.get(BASE_API_PATH + "/providers", (req, res) =>{
+app.get(BASE_API_PATH + "/providers", 
+    passport.authenticate('localapikey', {session: false}),
+    (req, res) =>{
     console.log(Date() + "- GET /providers");
     Provider.find({}, (err, providers) => {
         if (err) {
@@ -29,7 +37,9 @@ app.get(BASE_API_PATH + "/providers", (req, res) =>{
     
 });
 
-app.post(BASE_API_PATH + "/providers", (req, res) => {
+app.post(BASE_API_PATH + "/providers",
+    passport.authenticate('localapikey', {session: false}),    
+    (req, res) => {
     console.log(Date() + "- POST /providers");
     var provider = req.body;
 
@@ -47,7 +57,9 @@ app.post(BASE_API_PATH + "/providers", (req, res) => {
 //PUT Method para un actualizar ejm mail del proveedor 3
 //"email":"provedor3@gmail.com"}
     
-app.put(BASE_API_PATH + "/providers" + "/:id" + "/email", (req, res) => {
+app.put(BASE_API_PATH + "/providers" + "/:id" + "/email",
+    passport.authenticate('localapikey', {session: false}), 
+    (req, res) => {
     console.log(Date() + "- DELETE /providers/id/email");
     var email_prov = req.body.email;
     console.log(email_prov);
@@ -64,8 +76,11 @@ app.put(BASE_API_PATH + "/providers" + "/:id" + "/email", (req, res) => {
 });
 
 //actualizar todo el proveedor
-app.put(BASE_API_PATH + "/provider"+"/:id", (req, res) => {
-    console.log(Date() + "- PUT /provider/id");
+
+app.put(BASE_API_PATH + "/provider"+"/:id",
+    passport.authenticate('localapikey', {session: false}),
+    (req, res) => {
+    console.log(Date() + "- DELETE /providers/id/update");
     var cif_prov = req.body.cif;
     var name_prov = req.body.name;
     var address_prov = req.body.address;
@@ -95,7 +110,9 @@ app.put(BASE_API_PATH + "/provider"+"/:id", (req, res) => {
 
 //DELETE Method - Elimina todos los proveedores
 
-app.delete(BASE_API_PATH + "/providers", (req, res) => {
+app.delete(BASE_API_PATH + "/providers",
+    passport.authenticate('localapikey', {session: false}),
+    (req, res) => {
     console.log(Date() + "- DELETE /providers");
     Provider.deleteMany({}, {multi: true}, (err) => {
         if (err) {
@@ -109,7 +126,9 @@ app.delete(BASE_API_PATH + "/providers", (req, res) => {
     
 //DELETE Method - Elimina uno (en este caso el proveedor 3)
 
-app.delete(BASE_API_PATH + "/providers" + '/:id', (req, res) => {
+app.delete(BASE_API_PATH + "/providers" + '/:id',
+    passport.authenticate('localapikey', {session: false}),
+    (req, res) => {
     console.log(Date() + "- DELETE /providers/id");
     var cifID = req.params.id;
     console.log(cifID);

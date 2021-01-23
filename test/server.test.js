@@ -2,8 +2,9 @@ const app = require('../server.js');
 const Provider = require('../providers.js');
 const request = require('supertest');
 const { response, query } = require('express');
-
-
+const ApiKey = require('../apikey.js');
+const { query } = require('express');
+const apikey = require('../apikey');
 
 
 
@@ -51,14 +52,25 @@ describe("Providers API", () =>{
                 "stock_sale": "200"})
             ];
 
+            const user = {
+                user: "test",
+                apikey: "1"
+            }
+
             dbFind = jest.spyOn(Provider, "find");
             dbFind.mockImplementation((query, callback) => {
                 callback(null, providers);
             });
+
+            auth = jest.spyOn(ApiKey, "findOne");
+            auth.mockImplementation((query, callback) => {
+                callback(null, new ApiKey(user));
+            })
         });
     
+
         it('Should return all providers', () => {
-            return  request(app).get('/api/v1/providers').then((response) =>{
+            return  request(app).get('/api/v1/providers').set('apikey', '1').then((response) =>{
                 expect(response.statusCode).toBe(200);
                 expect(response.body).toBeArrayOfSize(2);
                 expect(dbFind).toBeCalledWith({}, expect.any(Function));
