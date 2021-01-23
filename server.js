@@ -64,27 +64,30 @@ app.put(BASE_API_PATH + "/providers" + "/:id" + "/email", (req, res) => {
 });
 
 //actualizar todo el proveedor
-app.put(BASE_API_PATH + "/providers"+"/:id", (req, res) => {
-    console.log(Date() + "- DELETE /providers/id/update");
+app.put(BASE_API_PATH + "/provider"+"/:id", (req, res) => {
+    console.log(Date() + "- PUT /provider/id");
     var cif_prov = req.body.cif;
     var name_prov = req.body.name;
     var address_prov = req.body.address;
     var cp_prov = req.body.cp;
     var email_prov = req.body.email;
     var phone_prov = req.body.phone;
-    var email_prov = req.body.email;
+    var code_prov = req.body.code;
+    var stock_prov = req.body.stock_sale;
     var cifID = req.params.id;
     Provider.updateOne({cif: cifID}, {$set:{cif:cif_prov, 
         name: name_prov, 
         address: address_prov, 
         cp: cp_prov,
         email: email_prov,
-        phone: phone_prov}}, {multi: true}, (err)  => {
+        phone: phone_prov,
+        code: code_prov,
+        stock_sale: stock_prov}}, {multi: true}, (err)  => {
         if (err) {
             console.log(Date() + " - " + err);
             res.sendStatus(500);
         } else {
-            res.sendStatus(200);
+            res.status(200).send('Provider Updated');
             console.log("Los datos del Proveedor han sido actualizados")
         }
       });
