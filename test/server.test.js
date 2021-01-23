@@ -1,9 +1,11 @@
 const app = require('../server.js');
 const Provider = require('../providers.js');
 const request = require('supertest');
+const { response, query } = require('express');
 const ApiKey = require('../apikey.js');
 const { query } = require('express');
 const apikey = require('../apikey');
+
 
 
 describe("Hello World test", () => {
@@ -66,7 +68,8 @@ describe("Providers API", () =>{
             })
         });
     
-        it('Should return all contacts', () => {
+
+        it('Should return all providers', () => {
             return  request(app).get('/api/v1/providers').set('apikey', '1').then((response) =>{
                 expect(response.statusCode).toBe(200);
                 expect(response.body).toBeArrayOfSize(2);
@@ -75,9 +78,90 @@ describe("Providers API", () =>{
         });
     });
 
+    ///////
+    describe('DELETE /providers', () => {
+        
+        beforeEach(() => {
+        dbRemove = jest.spyOn(Provider, "deleteMany");
+        });
+
+        it('Should delete all providers', () => {
+            dbRemove.mockImplementation((query, c, callback) =>{
+                callback(false);
+            });
+
+            return request(app).delete('/api/v1/providers')
+            .then((response) =>{
+                expect(response.statusCode).toBe(204);
+                expect(response.body).toBeNaN();
+                expect(dbRemove).toBeCalledWith({}, {multi: true}, expect.any(Function));
+            });
+        });
+
+        it('Shoul return an error in DB',() => {
+            dbRemove.mockImplementation((query, c, callback) => {
+                callback(true);
+            });
+            return request(app).delete('/api/v1/providers')
+            .then((response) => {
+                expect(response.statusCode).toBe(500);
+            });
+        });
+    });
+
+
+    describe('PUT /provider', () => {
+        let dbUpdate;
+
+        const provider = {cif: "A65321782",
+        name: "Proveedor 3",
+        address: "Malaga",
+        cp:"18945",
+        phone: "0987690000",
+        email: "provedor3@gmail.com",
+        code: "FGH789",
+        stock_sale: "200"}
+        ;
+
+        beforeEach(() => {
+        dbUpdate = jest.spyOn(Provider, "updateOne");
+        });
+
+        it('Should update a  provider', () => {
+            dbUpdate.mockImplementation((query, c, d, callback) =>{
+                callback(false);
+            });
+
+            return request(app).put('/api/v1/provider/A65321782')
+            .send(provider)
+            .then((response) =>{
+                expect(response.statusCode).toBe(200);
+                expect(provider.name).toEqual("Proveedor 3");
+                expect(response.text).toEqual(expect.stringContaining("Provider Updated"));
+            });
+        });
+
+        it('Should return an error in DB', () => {
+            dbUpdate.mockImplementation((query,c,d, callback) => {
+                callback(true);
+            });
+
+            return request(app).put('/api/v1/provider/A65321782')
+            .send(provider)
+            .then((response) => {
+                expect(response.statusCode).toBe(500);
+            });
+        });
+
+        
+    });
+
+   
+    ///////
+
     describe('POST /providers', () => {
             let dbInsert;
-            const provider = {cif: "A65321782",
+            const provider = {cif: "A65321234",
                             name: "Proveedor 3",
                             address: "Malaga",
                             cp:"18945",
@@ -90,7 +174,7 @@ describe("Providers API", () =>{
             dbInsert = jest.spyOn(Provider, "create");
             });
 
-            it('Should add a new contact if everything is fine', () => {
+            it('Should add a new provider if everything is fine', () => {
                 dbInsert.mockImplementation((c, callback) =>{
                     callback(false);
                 });
@@ -108,10 +192,8 @@ describe("Providers API", () =>{
                 return request(app).post('/api/v1/providers').send(provider).then((response) =>{
                 expect(response.statusCode).toBe(500);
             });
-            });
+        });
 
-       
     });
 
 });
-
