@@ -42,7 +42,6 @@ app.post(BASE_API_PATH + "/providers",
     (req, res) => {
     console.log(Date() + "- POST /providers");
     var provider = req.body;
-
     Provider.create(provider, (err) => {
         if (err) {
             console.log(Date() + " - " + err);
@@ -56,54 +55,43 @@ app.post(BASE_API_PATH + "/providers",
 
 //PUT Method para un actualizar ejm mail del proveedor 3
 //"email":"provedor3@gmail.com"}
+// el id para el caso de los Proveedores hace referencia  al CIF
     
 app.put(BASE_API_PATH + "/providers" + "/:id" + "/email",
     passport.authenticate('localapikey', {session: false}), 
     (req, res) => {
     console.log(Date() + "- DELETE /providers/id/email");
-    var email_prov = req.body.email;
-    console.log(email_prov);
-    var cifID = req.params.id;
-    Provider.updateOne({cif: cifID}, {$set:{email: email_prov}}, {multi: true}, (err)  => {
+    Provider.updateOne({cif: req.params.id},
+        {$set:{email: req.body.email}}, 
+        {multi: true}, (err)  => {
         if (err) {
             console.log(Date() + " - " + err);
             res.sendStatus(500);
         } else {
-            res.sendStatus(200);
-            console.log("El email Acualizado es:" + email_prov)
+            res.status(200).send('Updated email');
         }
       });
 });
 
 //actualizar todo el proveedor
 
-app.put(BASE_API_PATH + "/provider"+"/:id",
+app.put(BASE_API_PATH + "/providers"+"/:id",
     passport.authenticate('localapikey', {session: false}),
     (req, res) => {
-    console.log(Date() + "- DELETE /providers/id/update");
-    var cif_prov = req.body.cif;
-    var name_prov = req.body.name;
-    var address_prov = req.body.address;
-    var cp_prov = req.body.cp;
-    var email_prov = req.body.email;
-    var phone_prov = req.body.phone;
-    var code_prov = req.body.code;
-    var stock_prov = req.body.stock_sale;
-    var cifID = req.params.id;
-    Provider.updateOne({cif: cifID}, {$set:{cif:cif_prov, 
-        name: name_prov, 
-        address: address_prov, 
-        cp: cp_prov,
-        email: email_prov,
-        phone: phone_prov,
-        code: code_prov,
-        stock_sale: stock_prov}}, {multi: true}, (err)  => {
+    console.log(Date() + "- DELETE /providers/id");
+    Provider.updateOne({cif: req.params.id}, {$set:{cif: req.body.cif, 
+        name: req.body.name, 
+        address: req.body.address, 
+        cp: req.body.cp,
+        email: req.body.email,
+        phone: req.body.phone,
+        code: req.body.code,
+        stock_sale: req.body.stock_sale}}, {multi: true}, (err)  => {
         if (err) {
             console.log(Date() + " - " + err);
             res.sendStatus(500);
         } else {
-            res.status(200).send('Provider Updated');
-            console.log("Los datos del Proveedor han sido actualizados")
+            res.status(200).send('Updated Provider');
         }
       });
 });
@@ -124,21 +112,19 @@ app.delete(BASE_API_PATH + "/providers",
     });
 });
     
-//DELETE Method - Elimina uno (en este caso el proveedor 3)
+
+//DELETE Method - Elimina un provedor (el parametro id que se pasa es el CIF)
 
 app.delete(BASE_API_PATH + "/providers" + '/:id',
     passport.authenticate('localapikey', {session: false}),
     (req, res) => {
     console.log(Date() + "- DELETE /providers/id");
-    var cifID = req.params.id;
-    console.log(cifID);
-    Provider.deleteOne({cif: cifID}, (err) => {
+    Provider.deleteOne({cif: req.params.id}, (err) => {
         if (err) {
             console.log(Date() + " - " + err);
             res,sendStatus(500);
         } else {
-            res.sendStatus(204);
-            console.log("Se elimino el Provedor con CIF:  " + cifID);
+            res.status(204).send('Deleted Provider');
         }
     });
 });
@@ -149,33 +135,54 @@ app.delete(BASE_API_PATH + "/providers" + '/:id',
 
 app.get(BASE_API_PATH + "/:id" + "/:stock", (req, res) => {
     console.log(Date() + "- Send info Stock");
-    const aux = req.params.stock;
+    var aux = Number(req.params.stock);
     Provider.findOne({cif: req.params.id}, (err, providers) => {
         if(err){
             console.log(Date() + " - " + err);
             res.sendStatus(500);
         } else{
-            res.status(200).send(providers);
+            
             console.log("Codigo del Producto: " + providers.code + 
             " -  stock Disponible: " + providers.stock_sale)
         }
         const prov_stock = providers.stock_sale;
-        if(prov_stock < aux){
+        var stock= prov_stock + aux;
+        if(stock <0){
             console.log("NOT ENOUGH STOCK");
+            res.status(500).send("0");
         }else{
-            Provider.updateOne({cif: req.params.id}, {$set: {stock_sale: prov_stock - aux}}, {new: true}, 
+            Provider.updateOne({cif: req.params.id}, {$set: {stock_sale: stock}}, {new: true}, 
                 (err) => {
                     if(err){
+                        res.status(500).send("0");
                         console.log("NO se pudo");
                     }else{
                         console.log("Updated");
+                        res.status(200).send("1");
+                        
                     }
                 })
         }
         
     })
-})
+});
 
+// Get de proveedores por id (CIF del provvedor) - solicitado por MS Products
+
+app.get(BASE_API_PATH + "/providers" + "/info" + "/:id", 
+    passport.authenticate('localapikey', {session: false}),
+    (req, res) =>{
+    console.log(Date() + "- GET /providers/id");
+    Provider.findOne({cif: req.params.id}, (err, providers) => {
+        if (err) {
+            console.log(Date() + " - " + err);
+            res.sendStatus(500);
+        } else {
+            res.status(200).send(providers);
+        }
+    });
+    
+});
 
 
 //////integarcion con MS Orders
