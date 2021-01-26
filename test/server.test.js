@@ -175,7 +175,7 @@ describe("Providers API", () =>{
             .then((response) =>{
                 expect(response.statusCode).toBe(200);
                 expect(provider.name).toEqual("Proveedor 3");
-                expect(response.text).toEqual(expect.stringContaining("Provider Updated"));
+                expect(response.text).toEqual(expect.stringContaining("Updated Provider"));
             });
         });
 
