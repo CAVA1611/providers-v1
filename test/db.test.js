@@ -4,8 +4,10 @@ const dbConnect = require('../db');
 jest.setTimeout(30000);
 
 describe('DB connection', () => {
-    beforeAll(() => {
-        return dbConnect();
+    beforeAll(async () => {
+        //return dbConnect();
+        const url = 'mongodb://db/test';
+        await mongoose.connect(url, { useNewUrlParser: true});
     })
 
     beforeEach((done) => {
