@@ -1,6 +1,7 @@
 const Provider = require('../providers.js');
 const mongoose = require('mongoose');
 const dbConnect = require('../db');
+jest.setTimeout(30000);
 
 describe('DB connection', () => {
     beforeAll(() => {
