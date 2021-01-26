@@ -9,6 +9,7 @@ before_install:
 install:
   - npm install
 script:
+  - npm test
   - docker build -t providers .
 deploy:
   provider: script
