@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const DB_URL = (process.env.MONGO_URL || 'mongodb://db/test');
+const DB_URL = ('mongodb+srv://cava_contacts:201010782@cluster0-contacts.p4c5m.mongodb.net/provi?retryWrites=true&w=majority')//(process.env.MONGO_URL || 'mongodb://db/test');
 
 
 const dbConnect = function() {
