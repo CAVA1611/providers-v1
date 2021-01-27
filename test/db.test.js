@@ -1,10 +1,13 @@
 const Provider = require('../providers.js');
 const mongoose = require('mongoose');
 const dbConnect = require('../db');
+jest.setTimeout(30000);
 
 describe('DB connection', () => {
-    beforeAll(() => {
-        return dbConnect();
+    beforeAll(async () => {
+        //return dbConnect();
+        //const url = 'mongodb://db/test';
+        await dbConnect();//mongoose.connect(url, { useNewUrlParser: true});
     })
 
     beforeEach((done) => {
@@ -28,6 +31,7 @@ describe('DB connection', () => {
                 expect(providers).toBeArrayOfSize(1);
                 done();
             });
+            
         });
     });
 

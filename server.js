@@ -75,7 +75,7 @@ app.put(BASE_API_PATH + "/providers" + "/:id" + "/email",
 
 //actualizar todo el proveedor
 
-app.put(BASE_API_PATH + "/providers"+"/:id",
+app.put(BASE_API_PATH + "/provider"+"/:id",
     passport.authenticate('localapikey', {session: false}),
     (req, res) => {
     console.log(Date() + "- DELETE /providers/id");
