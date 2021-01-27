@@ -184,7 +184,7 @@ describe("Providers API", () =>{
                 callback(true);
             });
 
-            return request(app).put('/api/v1/provider/A65321782')
+            return request(app).put('/api/v1/providers/A65321782')
             .set('apikey', '49ac')
             .send(provider)
             .then((response) => {
