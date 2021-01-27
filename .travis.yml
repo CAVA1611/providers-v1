@@ -4,6 +4,7 @@ node_js:
   - "lts/*"
 services:
   - docker
+  - mongodb
 env:
   - MONGO_URL=$MONGO_URL
 before_install:
@@ -11,6 +12,7 @@ before_install:
 install:
   - npm install
 script:
+  - npm test
   - docker build -t providers .
 deploy:
   provider: script
