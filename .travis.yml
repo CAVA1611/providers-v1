@@ -4,6 +4,8 @@ node_js:
   - "lts/*"
 services:
   - docker
+env:
+  - MONGO_URL=$MONGO_URL
 before_install:
   - wget -qO- https://toolbelt.heroku.com/install.sh | sh
 install:
