@@ -7,6 +7,9 @@ services:
   - mongodb
 before_install:
   - wget -qO- https://toolbelt.heroku.com/install.sh | sh
+before_script:
+  - sleep 15
+  - mongo mydb_test --eval 'db.createUser({user:"travis",pwd:"test",roles:["readWrite"]});'
 install:
   - npm install
 script:
